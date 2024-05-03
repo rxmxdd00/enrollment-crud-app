@@ -161,10 +161,24 @@ class _CourseScreenState extends State<CourseScreen> {
                         'actionFrom': 'Course'
                       };
                       isButtonDisabled = false;
-                      return SingleChildScrollView(
-                        child: ReusableList(
-                            list_data: filteredData ?? course, tileData: data),
-                      );
+                      return course.length > 0
+                          ? ReusableList(
+                              list_data: filteredData ?? course, tileData: data)
+                          : const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.library_books,
+                                  size: 150.0,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'No data',
+                                  style: TextStyle(
+                                      fontSize: 24.0, color: Colors.grey),
+                                )
+                              ],
+                            );
                     }
                   },
                 )

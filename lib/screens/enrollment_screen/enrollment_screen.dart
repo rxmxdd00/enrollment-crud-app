@@ -166,9 +166,25 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         'sub_title': 'courseName',
                         'actionFrom': 'Enrollment'
                       };
-                      return ReusableList(
-                          list_data: filteredData ?? enrollment,
-                          tileData: data);
+                      return enrollment.length > 0
+                          ? ReusableList(
+                              list_data: filteredData ?? enrollment,
+                              tileData: data)
+                          : const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_card,
+                                  size: 150.0,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'No data',
+                                  style: TextStyle(
+                                      fontSize: 24.0, color: Colors.grey),
+                                )
+                              ],
+                            );
                     }
                   },
                 ),

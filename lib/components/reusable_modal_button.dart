@@ -4,13 +4,14 @@ import '../utils/constants.dart';
 
 class ReusableModalButton extends StatelessWidget {
   final Widget? addDialogScreen;
-  final bool? isDisabled;
-  const ReusableModalButton({super.key, this.addDialogScreen, this.isDisabled});
+  final bool isDisabled;
+  const ReusableModalButton(
+      {super.key, this.addDialogScreen, required this.isDisabled});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isDisabled!
+      onPressed: isDisabled
           ? null
           : () {
               showModalBottomSheet(

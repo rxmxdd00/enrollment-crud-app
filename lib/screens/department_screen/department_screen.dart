@@ -118,6 +118,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                   future: departmentProvider.getDepartmentsData(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
+                      isButtonDisabled = true;
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error loading data: ${snapshot.error}');
@@ -155,12 +156,26 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                         'actionFrom': 'Department'
                       };
                       isButtonDisabled = false;
-                      return SingleChildScrollView(
-                        child: ReusableList(
-                          list_data: filteredData ?? department,
-                          tileData: data,
-                        ),
-                      );
+                      return department.length > 0
+                          ? ReusableList(
+                              list_data: filteredData ?? department,
+                              tileData: data,
+                            )
+                          : const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_home,
+                                  size: 150.0,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'No data',
+                                  style: TextStyle(
+                                      fontSize: 24.0, color: Colors.grey),
+                                )
+                              ],
+                            );
                     }
                   },
                 ),

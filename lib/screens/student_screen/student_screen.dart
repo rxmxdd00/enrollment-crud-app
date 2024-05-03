@@ -168,8 +168,25 @@ class _StudentScreenState extends State<StudentScreen> {
                         'actionFrom': 'Student'
                       };
                       isButtonDisabled = false;
-                      return ReusableList(
-                          list_data: filteredData ?? student, tileData: data);
+                      return student.length > 0
+                          ? ReusableList(
+                              list_data: filteredData ?? student,
+                              tileData: data)
+                          : const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 150.0,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'No data',
+                                  style: TextStyle(
+                                      fontSize: 24.0, color: Colors.grey),
+                                )
+                              ],
+                            );
                     }
                   },
                 ),
