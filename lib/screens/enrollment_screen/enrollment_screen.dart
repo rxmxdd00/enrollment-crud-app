@@ -128,10 +128,15 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       isButtonDisabled = true;
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
+                      print(snapshot);
                       return Text('Error loading data: ${snapshot.error}');
                     } else if (!snapshot.hasData) {
                       return const Text('No data available.');
                     } else {
+                      var failData = snapshot.data![0];
+                      if (failData['success'] == false) {
+                        return Center(child: Text('${failData['message']}'));
+                      }
                       if (filteredData == null && enrollment.isEmpty) {
                         enrollment = snapshot.data!;
                       } else {
@@ -170,18 +175,19 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                           ? ReusableList(
                               list_data: filteredData ?? enrollment,
                               tileData: data)
-                          : const Column(
+                          : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.add_card,
-                                  size: 150.0,
-                                  color: Colors.grey,
+                                  size: 100.0,
+                                  color: Colors.grey.shade500,
                                 ),
                                 Text(
                                   'No data',
                                   style: TextStyle(
-                                      fontSize: 24.0, color: Colors.grey),
+                                      fontSize: 24.0,
+                                      color: Colors.grey.shade500),
                                 )
                               ],
                             );

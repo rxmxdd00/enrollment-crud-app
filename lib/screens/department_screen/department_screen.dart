@@ -125,6 +125,10 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                     } else if (!snapshot.hasData) {
                       return Text('No data available.');
                     } else {
+                      var failData = snapshot.data![0];
+                      if (failData['success'] == false) {
+                        return Center(child: Text('${failData['message']}'));
+                      }
                       if (filteredData == null && department.isEmpty) {
                         department = snapshot.data!;
                       } else {
@@ -161,18 +165,19 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                               list_data: filteredData ?? department,
                               tileData: data,
                             )
-                          : const Column(
+                          : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.add_home,
-                                  size: 150.0,
-                                  color: Colors.grey,
+                                  Icons.add_card,
+                                  size: 100.0,
+                                  color: Colors.grey.shade500,
                                 ),
                                 Text(
                                   'No data',
                                   style: TextStyle(
-                                      fontSize: 24.0, color: Colors.grey),
+                                      fontSize: 24.0,
+                                      color: Colors.grey.shade500),
                                 )
                               ],
                             );

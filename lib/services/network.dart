@@ -6,6 +6,7 @@ class Network {
   final String? url;
   final String? token;
   Network({this.url, this.token});
+  final String appKey = 'base64:Nm/dNVkgdp/UxOB1rLG4GGYcqiUDrtQ4C/nvw/bFxH4=';
 
   auth(data) async {
     try {
@@ -16,7 +17,7 @@ class Network {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        print('Error adding data. ${response.statusCode}');
+        print('Authentication Failed. ${response.statusCode}');
         return null;
       }
     } catch (e) {
@@ -28,10 +29,9 @@ class Network {
   logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? _token = prefs.getString('token');
-    print(_token);
-    final String? _name = prefs.getString('name');
-    var data = {"name": _name, "token": _token};
-    print(data);
+    final String? _fName = prefs.getString('firstName');
+    final String? _lName = prefs.getString('lastName');
+    var data = {"firstName": _fName, "lastName": _lName, "token": _token};
     try {
       var fullUrl = Uri.parse(url!);
       http.Response response = await http.post(fullUrl,
@@ -39,7 +39,8 @@ class Network {
           body: jsonEncode(data));
       if (response.statusCode == 200) {
         prefs.remove('token');
-        prefs.remove('name');
+        prefs.remove('_fName');
+        prefs.remove('_lName');
         return jsonDecode(response.body);
       } else {
         print('Error adding data. ${response.statusCode}');
@@ -64,6 +65,11 @@ class Network {
         return data;
       } else {
         print('Error : ${response.statusCode}');
+        var errorResponse = {
+          "success": false,
+          "message": 'Unauthorized User',
+        };
+        return errorResponse;
       }
     } catch (e) {
       print(e);
@@ -78,6 +84,7 @@ class Network {
       http.Response response = await http.put(
         fullUrl,
         headers: {
+          'X-API-KEY': appKey,
           'Authorization': 'Bearer ${_token!}',
           'Content-Type': 'application/json'
         },
@@ -99,6 +106,7 @@ class Network {
   addData(data) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? _token = prefs.getString('token');
+    print('token : $_token');
     try {
       var fullUrl = Uri.parse(url!);
       http.Response response = await http.post(

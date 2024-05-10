@@ -129,6 +129,10 @@ class _CourseScreenState extends State<CourseScreen> {
                     } else if (!snapshot.hasData) {
                       return Text('No data available.');
                     } else {
+                      var failData = snapshot.data![0];
+                      if (failData['success'] == false) {
+                        return Center(child: Text('${failData['message']}'));
+                      }
                       if (filteredData == null && course.isEmpty) {
                         course = snapshot.data!;
                       } else {
@@ -164,18 +168,19 @@ class _CourseScreenState extends State<CourseScreen> {
                       return course.length > 0
                           ? ReusableList(
                               list_data: filteredData ?? course, tileData: data)
-                          : const Column(
+                          : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.library_books,
-                                  size: 150.0,
-                                  color: Colors.grey,
+                                  Icons.add_card,
+                                  size: 100.0,
+                                  color: Colors.grey.shade500,
                                 ),
                                 Text(
                                   'No data',
                                   style: TextStyle(
-                                      fontSize: 24.0, color: Colors.grey),
+                                      fontSize: 24.0,
+                                      color: Colors.grey.shade500),
                                 )
                               ],
                             );

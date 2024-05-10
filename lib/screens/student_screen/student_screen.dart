@@ -132,8 +132,10 @@ class _StudentScreenState extends State<StudentScreen> {
                     } else if (!snapshot.hasData) {
                       return Text('No data available.');
                     } else {
-                      var dlength = snapshot.data!.length;
-
+                      var failData = snapshot.data![0];
+                      if (failData['success'] == false) {
+                        return Center(child: Text('${failData['message']}'));
+                      }
                       if (filteredData == null && student.isEmpty) {
                         student = snapshot.data!;
                       } else {
@@ -172,18 +174,19 @@ class _StudentScreenState extends State<StudentScreen> {
                           ? ReusableList(
                               list_data: filteredData ?? student,
                               tileData: data)
-                          : const Column(
+                          : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.person,
-                                  size: 150.0,
-                                  color: Colors.grey,
+                                  size: 100.0,
+                                  color: Colors.grey.shade500,
                                 ),
                                 Text(
                                   'No data',
                                   style: TextStyle(
-                                      fontSize: 24.0, color: Colors.grey),
+                                      fontSize: 24.0,
+                                      color: Colors.grey.shade500),
                                 )
                               ],
                             );

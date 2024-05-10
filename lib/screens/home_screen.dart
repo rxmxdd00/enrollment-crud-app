@@ -7,11 +7,10 @@ import 'package:crud_app/screens/student_screen/student_screen.dart';
 import 'package:crud_app/services/app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/constants.dart';
+import 'authentication_screen/register_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const id = 'home_screen';
@@ -24,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // List<BottomNavigationBarItem> item = [];
   int _currentIndex = 0;
+  String? assignedRole;
+  String? userName;
   List<NavigationModel> item = [
     NavigationModel(label: 'Enrollment', icon: Icons.topic_rounded),
     NavigationModel(label: 'Student', icon: Icons.person),
@@ -51,7 +52,29 @@ class _HomeScreenState extends State<HomeScreen> {
     //   context,
     //   MaterialPageRoute(builder: (context) => LoginScreen()),
     // );
-    Navigator.pop(context);
+
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false);
+    // Navigator.pop(context);
+  }
+
+  void getRole() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? role = prefs.getString('role');
+    final String? firstName = prefs.getString('firstName');
+    setState(() {
+      assignedRole = role;
+      userName = firstName;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getRole();
   }
 
   @override
@@ -61,39 +84,63 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Confirm Logout"),
-                      content: const Text("Are you sure you want to log out?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                            _performLogout(); // Call the logout function
-                          },
-                          child: Text("Logout"),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: const Icon(
-                Icons.exit_to_app,
-                size: 40.0,
+            Text(
+              'Hi, ${userName ?? ''}',
+              style: const TextStyle(
                 color: kDefColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 18.0,
               ),
             ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Confirm Logout"),
+                          content:
+                              const Text("Are you sure you want to log out?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                                _performLogout(); // Call the logout function
+                              },
+                              child: Text("Logout"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.exit_to_app,
+                    size: 40.0,
+                    color: kDefColor,
+                  ),
+                ),
+                if (assignedRole == 'admin')
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, RegisterScreen.id);
+                    },
+                    icon: const Icon(
+                      Icons.add_rounded,
+                      size: 40.0,
+                      color: kDefColor,
+                    ),
+                  )
+              ],
+            )
           ],
         ),
       ),

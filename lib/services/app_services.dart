@@ -8,8 +8,9 @@ const courseApiUrl = 'http://10.0.2.2:8000/api/courses';
 
 class AppServices extends ChangeNotifier {
   Future registerAccount(data) async {
-    Network network = Network(url: 'http://10.0.2.2:8000/api/register');
-    var accData = await network.auth(data);
+    print(data);
+    Network network = Network(url: 'http://10.0.2.2:8000/api/users');
+    var accData = await network.addData(data);
 
     if (accData != null) {
       return accData;
@@ -44,6 +45,12 @@ class AppServices extends ChangeNotifier {
     Network network = Network(url: enrollmentApiUrl);
     var enrollmentData = await network.getData();
     if (enrollmentData != null) {
+      var success = enrollmentData['success'];
+      if (success == false) {
+        List<dynamic> listRes = [];
+        listRes.add(enrollmentData);
+        return listRes;
+      }
       return enrollmentData['data'];
     } else {
       return [];
@@ -54,6 +61,12 @@ class AppServices extends ChangeNotifier {
     Network network = Network(url: departmentApiUrl);
     var depData = await network.getData();
     if (depData != null) {
+      var success = depData['success'];
+      if (success == false) {
+        List<dynamic> listRes = [];
+        listRes.add(depData);
+        return listRes;
+      }
       return depData['data'];
     } else {
       return [];
@@ -64,6 +77,12 @@ class AppServices extends ChangeNotifier {
     Network network = Network(url: studentApiUrl);
     var studentData = await network.getData();
     if (studentData != null) {
+      var success = studentData['success'];
+      if (success == false) {
+        List<dynamic> listRes = [];
+        listRes.add(studentData);
+        return listRes;
+      }
       return studentData['data'];
     } else {
       return [];
@@ -74,6 +93,12 @@ class AppServices extends ChangeNotifier {
     Network network = Network(url: courseApiUrl);
     var courseData = await network.getData();
     if (courseData != null) {
+      var success = courseData['success'];
+      if (success == false) {
+        List<dynamic> listRes = [];
+        listRes.add(courseData);
+        return listRes;
+      }
       return courseData['data'];
     } else {
       return [];
